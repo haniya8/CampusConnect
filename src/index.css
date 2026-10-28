@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { min-height: 100%; }
+body {
+  @apply font-sans text-ink antialiased;
+  background: linear-gradient(160deg, #FFF1DF 0%, #FFF6EA 40%, #F1E9FF 100%) fixed;
+  font-size: 16px;
+}
+button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+:focus-visible { outline: 3px solid #6B4FA0; outline-offset: 2px; }
+input, select, textarea { font: inherit; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
