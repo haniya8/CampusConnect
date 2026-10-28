@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, Card, Chip, Field, inputCls, Screen, TopBar } from '../components/ui';
 import { useStore } from '../store';
+import { TypeChips } from '../components/TypeChips';
 import { GAME_LAYER } from '../config';
 import { TIME_SLOTS } from '../seed';
 import type { Level } from '../types';
@@ -67,9 +68,7 @@ export function Prefs() {
       <Screen>
         <p className="mb-4">This helps us suggest plans. You can change it any time and skip it now.</p>
         <Field label="What do you like?">
-          <div className="flex flex-wrap gap-2">
-            {types.map((t) => <Chip key={t.name} selected={sel.includes(t.name)} onClick={() => setSel(toggle(sel, t.name))}>{t.name}</Chip>)}
-          </div>
+          <TypeChips multi names={types.map((t) => t.name)} selected={sel} onToggle={(n) => setSel(toggle(sel, n))} />
         </Field>
         <Field label="Your usual level">
           <div className="flex flex-wrap gap-2">

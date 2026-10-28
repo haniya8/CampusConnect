@@ -181,6 +181,8 @@ export function Me() {
   const blocked = useStore((s) => s.blocked);
   const students = useStore((s) => s.students);
   const unblock = useStore((s) => s.unblock);
+  const s = { signOut: useStore((st) => st.signOut) };
+  const [signOut, setSignOut] = useState(false);
   const nav = useNavigate();
   const lv = levelFor(points);
   return (
@@ -197,6 +199,14 @@ export function Me() {
         <Button full variant="secondary" onClick={() => nav('/notifications')}>Alerts</Button>
         <Button full variant="secondary" onClick={() => nav('/demo')}>Demo tools</Button>
       </div>
+      <Button full variant="danger" className="mt-2" onClick={() => setSignOut(true)}>Sign out</Button>
+      <Sheet open={signOut} title="Sign out?" onClose={() => setSignOut(false)}>
+        <p className="mb-4">Your plans, points, chats and blocks on this device will be removed. You can sign up again with a new nickname.</p>
+        <div className="space-y-2">
+          <Button full variant="danger" onClick={() => { s.signOut(); nav('/welcome', { replace: true }); }}>Yes, sign out</Button>
+          <Button full variant="secondary" onClick={() => setSignOut(false)}>Stay signed in</Button>
+        </div>
+      </Sheet>
       <h2 className="mb-2 mt-6 text-xl font-extrabold">Blocked people</h2>
       {blocked.length === 0 ? <p className="text-soft">You have not blocked anyone.</p> : (
         <div className="space-y-2">

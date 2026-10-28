@@ -10,7 +10,7 @@ import type {
   Student, Thread, User,
 } from './types';
 import {
-  applyCancel, applyJoin, applyLeave, applyReschedule, buildActivity, chatOpen, isLive, joinCheck,
+  computeStatus, applyCancel, applyJoin, applyLeave, applyReschedule, buildActivity, chatOpen, isLive, joinCheck,
   markDone as markDonePure, processDeadline, type JoinBlock,
 } from './logic/activity';
 import { emailError, nicknameError } from './logic/validation';
@@ -73,6 +73,7 @@ export interface State {
   demoTimePasses(id: string): void;
   demoWithdraw(id: string): void;
   demoInvite(id: string): void;
+  signOut(): void;
   resetAll(): void;
 }
 
@@ -378,6 +379,29 @@ export const useStore = create<State>()(
           if (!c) return;
           const r = applyJoin(a, c.id, nick);
           replaceActivity(r.activity, r.notices);
+        },
+
+        signOut() {
+          const now = Date.now();
+          set((s) => ({
+            user: null,
+            // keep the shared dummy world, but remove this user's footprint
+            activities: s.activities
+              .filter((a) => a.hostId !== 'me')
+              .map((a) => {
+                if (!a.participants.includes('me') || a.status === 'Done') return a;
+                const left = { ...a, participants: a.participants.filter((p) => p !== 'me') };
+                return { ...left, status: computeStatus(left) };
+              }),
+            threads: s.threads
+              .filter((t) => t.authorId !== 'me')
+              .map((t) => ({ ...t, replies: t.replies.filter((r) => r.authorId !== 'me') })),
+            notifications: [{ id: uid(), kind: 'info' as const, text: WELCOME_NOTE, at: now, read: false }],
+            chats: {},
+            answers: SEED_ANSWERS,
+            points: 0, ledger: [], questsDone: [], blocked: [], reports: [], followed: [],
+            joinedCommunities: [], gained: 0,
+          }));
         },
 
         resetAll() {

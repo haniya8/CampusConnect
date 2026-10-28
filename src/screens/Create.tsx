@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { useStore } from '../store';
+import { TypeChips } from '../components/TypeChips';
 import { Button, Chip, Field, inputCls, Screen, TopBar } from '../components/ui';
 import { HOUR, MAX_GROUP, MIN_GROUP, validateCreate } from '../logic/activity';
 import { fromInputValue, toInputValue } from '../logic/format';
@@ -70,7 +71,7 @@ export function Create() {
         <form onSubmit={publish} noValidate className="pb-8">
           <Field label="What is it?" error={errs.type}>
             <div className="flex flex-wrap gap-2">
-              {s.types.map((t) => <Chip key={t.name} selected={type === t.name} onClick={() => setType(t.name)}>{t.name}</Chip>)}
+              <TypeChips names={s.types.map((t) => t.name)} selected={[type]} onToggle={setType} />
               <button type="button" onClick={() => setNewType(!newType)} className="inline-flex min-h-[44px] items-center gap-1 rounded-full border-2 border-dashed border-grape px-4 font-semibold">
                 <Plus size={16} aria-hidden /> Add new type
               </button>

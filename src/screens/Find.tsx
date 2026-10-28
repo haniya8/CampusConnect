@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { useStore } from '../store';
 import { ActivityCard } from '../components/ActivityCard';
+import { TypeChips } from '../components/TypeChips';
 import { Button, Card, Chip, Empty, Screen } from '../components/ui';
 import { emptyFilters, filterActivities, type Filters } from '../logic/activity';
 import { startOfDay } from '../logic/format';
@@ -37,9 +38,7 @@ export function Find() {
       <Card className="mb-4 space-y-3">
         <fieldset>
           <legend className="mb-1 font-bold">Type</legend>
-          <div className="flex flex-wrap gap-2">
-            {['All', ...types.map((t) => t.name)].map((t) => <Chip key={t} selected={f.type === t} onClick={() => setF({ ...f, type: t })}>{t}</Chip>)}
-          </div>
+          <TypeChips names={['All', ...types.map((t) => t.name)]} selected={[f.type]} onToggle={(t) => setF({ ...f, type: t })} />
         </fieldset>
         <fieldset>
           <legend className="mb-1 font-bold">Day</legend>
